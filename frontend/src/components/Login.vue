@@ -65,6 +65,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import AuthStore from "@/store/modules/auth";
+import ErrorStore from "@/store/modules/error";
 
 @Component
 export default class Login extends Vue {
@@ -72,7 +73,6 @@ export default class Login extends Vue {
   username: string = "";
   email: string = "";
   password: string = "";
-  // errorMessages: string | null = null;
 
   created() {
     if (this.$route.name === "register") {
@@ -81,7 +81,7 @@ export default class Login extends Vue {
   }
 
   get errorMessages() {
-    return AuthStore.errorMessages;
+    return ErrorStore.errorMessages;
   }
 
   async userSignUp() {

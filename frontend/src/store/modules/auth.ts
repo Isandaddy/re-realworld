@@ -11,7 +11,6 @@ import HttpClient from "@/network/http";
 import AuthService from "@/service/AuthService";
 import TokenStorage from "@/db/token";
 import store from "../index";
-// import { CustomError } from "@/util/customError";
 
 const baseURL = "http://localhost:3000/api";
 const httpClient = new HttpClient(baseURL);
@@ -20,7 +19,6 @@ const authService = new AuthService(httpClient, tokenStorage);
 
 @Module({ store, name: "auth", namespaced: true, dynamic: true })
 class AuthStore extends VuexModule {
-  errorMessages: string | null = null;
   isAuthenticated: boolean = false;
   user = {
     email: "",
@@ -29,11 +27,6 @@ class AuthStore extends VuexModule {
     bio: "",
     image: "",
   };
-
-  @Mutation
-  setErrorMessage(message: string) {
-    this.errorMessages = message;
-  }
 
   @Mutation
   setAuthenticated(auth: boolean) {
@@ -47,30 +40,18 @@ class AuthStore extends VuexModule {
 
   @Action({ rawError: true })
   async postSignin(user: SigninReqest) {
-    try {
-      const userData: User = await authService.login(user);
-      this.setUser(userData);
-      this.setAuthenticated(true);
-      return userData;
-    } catch (error) {
-      if (error instanceof Error) {
-        this.setErrorMessage(error.message);
-      }
-    }
+    const userData: User = await authService.login(user);
+    this.setUser(userData);
+    this.setAuthenticated(true);
+    return userData;
   }
 
   @Action({ rawError: true })
   async postSignup(user: SignupReqest) {
-    try {
-      const userData: User = await authService.signup(user);
-      this.setUser(userData);
-      this.setAuthenticated(true);
-      return userData;
-    } catch (error) {
-      if (error instanceof Error) {
-        this.setErrorMessage(error.message);
-      }
-    }
+    const userData: User = await authService.signup(user);
+    this.setUser(userData);
+    this.setAuthenticated(true);
+    return userData;
   }
 
   @MutationAction
